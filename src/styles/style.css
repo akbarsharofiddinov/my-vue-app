@@ -1,0 +1,9 @@
+.no-bg {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.no-border {
+  border: none !important;
+  box-shadow: none !important;
+}
