@@ -49,8 +49,7 @@ export default {
 
 <template>
   <q-drawer
-    v-model="drawerOpen"
-    :mini="isMini"
+    :mini="mini"
     :width="200"
     :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     elevated
@@ -94,18 +93,23 @@ export default {
           <q-item-section> Send </q-item-section>
         </q-item>
 
-        <!-- <q-expansion-item expand-separator icon="folder_open" label="Товары">
+        <q-expansion-item
+          expand-separator
+          icon="folder_open"
+          label="Товары"
+          v-if="!mini"
+        >
           <q-item clickable v-ripple>
             <q-item-section>Element 1</q-item-section>
           </q-item>
           <q-item clickable v-ripple>
             <q-item-section>Element 2</q-item-section>
           </q-item>
-        </q-expansion-item> -->
+        </q-expansion-item>
 
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple v-if="mini">
           <q-item-section avatar>
-            <q-icon name="folder" />
+            <q-icon name="folder_open" />
           </q-item-section>
           <q-item-section>Basic Menu</q-item-section>
           <q-menu :offset="[-50, 0]" style="width: 200px">
@@ -176,12 +180,15 @@ export default {
 <script>
 export default {
   props: {
-    modelValue: Boolean,
-    isMini: Boolean,
+    mini: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     drawerOpen: {
       get() {
+        console.log(this.modelValue);
         return this.modelValue;
       },
       set(value) {

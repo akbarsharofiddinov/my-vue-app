@@ -1,7 +1,11 @@
 <template>
   <q-layout view="lHh lpR fFf" v-if="isMini">
     <Header @toggle-drawer="toggleLeftDrawer" />
-    <Sidebar v-model="isMini" :mini="leftDrawerOpen" @enable-drawer="enableLeftDrawer" />
+    <Sidebar
+      v-model="isMini"
+      :mini="leftDrawerOpen"
+      @enable-drawer="enableLeftDrawer"
+    />
 
     <q-page-container>
       <router-view />
@@ -10,7 +14,7 @@
 
   <q-layout view="lHh lpR fFf" v-if="!isMini">
     <Header @toggle-drawer="toggleLeftDrawer" />
-    <Sidebar v-model="leftDrawerOpen" :mini="isMini" />
+    <Sidebar v-model="leftDrawerOpen" />
 
     <q-page-container>
       <router-view />
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
 
@@ -31,7 +35,7 @@ export default {
 
   setup() {
     // Sidebar ochiq yoki yopiq holatini saqlash
-    const leftDrawerOpen = ref(false);
+    const leftDrawerOpen = ref(true);
 
     // Mini rejim uchun o'zgaruvchi
     const isMini = ref(false);
@@ -60,8 +64,20 @@ export default {
     };
 
     // Ekran o'lchami o'zgarganda tekshirish
-    window.addEventListener("resize", checkScreenSize);
-    checkScreenSize(); // Dastlabki yuklanishda chaqirish
+    const resizeListener = () => {
+      checkScreenSize();
+    };
+
+    // Komponent yuklanganda vaqti va o‘lchamni tekshirish
+    onMounted(() => {
+      window.addEventListener("resize", resizeListener);
+      checkScreenSize(); // Dastlabki yuklanishda chaqirish
+    });
+
+    // Komponentni o'chirishda eventni to'xtatish
+    onBeforeUnmount(() => {
+      window.removeEventListener("resize", resizeListener);
+    });
 
     return {
       leftDrawerOpen,
